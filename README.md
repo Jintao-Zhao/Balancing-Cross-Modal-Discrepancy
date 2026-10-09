@@ -72,4 +72,4 @@ Visual comparison of prediction maps with state-of-the-art methods on the ACL-RG
 
 ## License
 
-No license has been specified yet.
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
