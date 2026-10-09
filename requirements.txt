@@ -1,0 +1,7 @@
+numpy == 1.23.1
+opencv_python == 4.7.0.68
+Pillow == 9.2.0
+timm == 0.6.13
+thop == 0.0.31.post2005241907
+torch == 1.12.1
+torchvision == 0.13.1
