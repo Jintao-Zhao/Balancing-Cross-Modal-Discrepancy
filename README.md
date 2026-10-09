@@ -2,20 +2,6 @@
 
 This repository contains the code for an RGB-T camouflaged object detection framework. It includes training with the DaAD and IGA components, MAE evaluation, and prediction-map generation.
 
-## Repository Structure
-
-```text
-.
-├── assets/          # Project images
-├── checkpoints/     # Store downloaded or generated model checkpoints
-├── lib/             # Model and network modules
-├── results/         # Store prediction maps
-├── utils/           # Data loading and utility code
-├── test.py          # Evaluation and prediction-map generation
-├── train.py         # Training
-└── requirements.txt
-```
-
 ## Requirements
 
 The dependency versions used by this code, including PyTorch and torchvision, are listed in `requirements.txt`. Choose a Python and CUDA environment compatible with those versions, then install the dependencies:
@@ -31,37 +17,9 @@ The dataset and checkpoint files are shared separately and are not stored in thi
 | Resource | Download | Extraction code |
 |---|---|---|
 | Model checkpoints | [Baidu Netdisk](https://pan.baidu.com/s/1j9AUOKEMCZeGWGD4fmlgPg) | `BCMD` |
-| Test dataset (`data_4_test`) | [Baidu Netdisk](https://pan.baidu.com/s/1LYqUlTdnFjnLzUqcLUN42w) | `BCMD` |
+| Test dataset | [Baidu Netdisk](https://pan.baidu.com/s/1LYqUlTdnFjnLzUqcLUN42w) | `BCMD` |
 
 The training dataset is not included in the test-dataset download. Prepare the training and validation datasets separately.
-
-## Dataset Layout
-
-Pass the training and validation directory paths with a trailing slash because `train.py` appends subdirectory names to these paths.
-
-```text
-train_dataset/
-├── RGB/
-├── T/
-├── GT/
-└── Edge/
-
-validation_dataset/
-├── RGB/
-├── T/
-└── GT/
-```
-
-For testing, provide the RGB, thermal, and ground-truth directories for one dataset split:
-
-```text
-test_dataset/
-├── RGB/
-├── T/
-└── GT/
-```
-
-The test script pairs files by their sorted order, so the corresponding RGB, thermal, and ground-truth files must be aligned and have matching counts.
 
 ## Training
 
