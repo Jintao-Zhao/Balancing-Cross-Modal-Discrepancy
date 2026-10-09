@@ -8,18 +8,6 @@ This repository contains the code for an RGB-T camouflaged object detection fram
 
 ![Network architecture of the proposed framework, including DaAD and IGA](assets/fig3.png)
 
-### Quantitative Comparison
-
-Quantitative comparison with state-of-the-art methods on the ACL-RGB and ACL-T datasets.
-
-![Quantitative comparison table on ACL-RGB and ACL-T](assets/fig4.png)
-
-### Qualitative Comparison
-
-Visual comparison of prediction maps with state-of-the-art methods on the ACL-RGB and ACL-T datasets.
-
-![Qualitative comparison of prediction maps on ACL-RGB and ACL-T](assets/fig5.png)
-
 ## Requirements
 
 The dependency versions used by this code, including PyTorch and torchvision, are listed in `requirements.txt`. Choose a Python and CUDA environment compatible with those versions, then install the dependencies:
@@ -69,6 +57,18 @@ python test.py \
 ```
 
 The script reports per-image MAE and the average MAE, and saves prediction maps to `--results_dir`. If `--results_dir` is omitted, maps are saved to the repository's `results/` directory. See `python test.py --help` for the available options.
+
+## Quantitative Comparison
+
+Quantitative comparison with state-of-the-art methods on the ACL-RGB and ACL-T datasets.
+
+![Quantitative comparison table on ACL-RGB and ACL-T](assets/fig4.png)
+
+## Qualitative Comparison
+
+Visual comparison of prediction maps with state-of-the-art methods on the ACL-RGB and ACL-T datasets.
+
+![Qualitative comparison of prediction maps on ACL-RGB and ACL-T](assets/fig5.png)
 
 ## License
 
