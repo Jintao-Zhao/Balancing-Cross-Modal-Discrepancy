@@ -1,8 +1,10 @@
 .DS_Store
 __pycache__/
 *.py[cod]
-checkpoints/
-results/
+checkpoints/**
+!checkpoints/note.txt
+results/**
+!results/note.txt
 *.pth
 *.pt
 *.ckpt
