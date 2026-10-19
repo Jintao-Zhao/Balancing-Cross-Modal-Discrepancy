@@ -135,25 +135,25 @@ def train(train_loader, model, optimizer, epoch, save_path, opt):
 
             loss.backward()
 
-            suppression_status = 'Balanced' if opt.use_iga else None
-            if opt.use_iga and epoch > opt.iga_warmup_epochs:
+            suppression_status = 'Balanced' if opt.use_igm else None
+            if opt.use_igm and epoch > opt.igm_warmup_epochs:
                 with torch.no_grad():
                     delta_c = (c_rgb_inst - c_t_inst)
                     delta_c_val = float(delta_c)
-                logging.info(f"[IGA] delta_c (c_rgb_inst - c_t_inst) = {delta_c_val:+.6f}")
+                logging.info(f"[IGM] delta_c (c_rgb_inst - c_t_inst) = {delta_c_val:+.6f}")
                 with torch.no_grad():
                     conf_mean = (w_full[:, 0] - w_full[:, 1]).abs().mean().detach()
-                    conf_gate = torch.sigmoid((conf_mean - opt.iga_conf_deadband) * opt.iga_conf_gain)
+                    conf_gate = torch.sigmoid((conf_mean - opt.igm_conf_deadband) * opt.igm_conf_gain)
                     imb = abs(c_rgb_inst - c_t_inst)
-                    imb_gate = math.tanh(imb / (opt.iga_imb_scale + 1e-6))
-                    intensity = opt.iga_alpha * float(conf_gate) * float(imb_gate)
+                    imb_gate = math.tanh(imb / (opt.igm_imb_scale + 1e-6))
+                    intensity = opt.igm_alpha * float(conf_gate) * float(imb_gate)
 
                     coeff_rgb_val = 1.0
                     coeff_t_val = 1.0
-                    if (c_rgb_inst - c_t_inst) > opt.iga_deadband:
-                        coeff_rgb_val = max(opt.iga_coeff_min, 1.0 - intensity)
-                    elif (c_t_inst - c_rgb_inst) > opt.iga_deadband:
-                        coeff_t_val = max(opt.iga_coeff_min, 1.0 - intensity)
+                    if (c_rgb_inst - c_t_inst) > opt.igm_deadband:
+                        coeff_rgb_val = max(opt.igm_coeff_min, 1.0 - intensity)
+                    elif (c_t_inst - c_rgb_inst) > opt.igm_deadband:
+                        coeff_t_val = max(opt.igm_coeff_min, 1.0 - intensity)
 
                     coeff_rgb = coeff_rgb_val
                     coeff_t = coeff_t_val
@@ -194,7 +194,7 @@ def train(train_loader, model, optimizer, epoch, save_path, opt):
                 post_t_mean   = float(torch.stack(rem11_t_post_vals).mean().cpu().item())   if rem11_t_post_vals   else 0.0
 
                 logging.info(
-                    "[IGA] REM11_RGB gradient mean | pre: {:.6e} -> post: {:.6e} (x{:.3f});  "
+                    "[IGM] REM11_RGB gradient mean | pre: {:.6e} -> post: {:.6e} (x{:.3f});  "
                     "REM11_T mean | pre: {:.6e} -> post: {:.6e} (x{:.3f})".format(
                         pre_rgb_mean, post_rgb_mean, (post_rgb_mean / (pre_rgb_mean + 1e-12)),
                         pre_t_mean,   post_t_mean,   (post_t_mean   / (pre_t_mean   + 1e-12))
@@ -290,7 +290,7 @@ def main():
     parser.add_argument('--load', type=str, default=None)
     parser.add_argument('--gpu_id', type=str, default='0,1')
 
-    parser.add_argument('--iga_warmup_epochs', type=int, default=0)
+    parser.add_argument('--igm_warmup_epochs', type=int, default=0)
 
     parser.add_argument('--train_root', type=str, required=True)
     parser.add_argument('--val_root', type=str, required=True)
@@ -305,16 +305,16 @@ def main():
         help='Weight for the DaAD branch loss')
 
 
-    parser.add_argument('--use_iga', action='store_true',
-        help='Enable IGA gradient alignment')
+    parser.add_argument('--use_igm', action='store_true',
+        help='Enable IGM gradient modulation')
 
-    parser.add_argument('--iga_alpha', type=float, default=0.1)
-    parser.add_argument('--iga_deadband', type=float, default=0.02)
-    parser.add_argument('--iga_coeff_min', type=float, default=0.5)
+    parser.add_argument('--igm_alpha', type=float, default=0.1)
+    parser.add_argument('--igm_deadband', type=float, default=0.02)
+    parser.add_argument('--igm_coeff_min', type=float, default=0.5)
 
-    parser.add_argument('--iga_conf_deadband', type=float, default=0.03)
-    parser.add_argument('--iga_conf_gain', type=float, default=8.0)
-    parser.add_argument('--iga_imb_scale', type=float, default=0.15)
+    parser.add_argument('--igm_conf_deadband', type=float, default=0.03)
+    parser.add_argument('--igm_conf_gain', type=float, default=8.0)
+    parser.add_argument('--igm_imb_scale', type=float, default=0.15)
 
     opt = parser.parse_args()
     set_seed(42)
@@ -360,10 +360,10 @@ def main():
         f'Config: epoch={opt.epoch}; lr={opt.lr}; batchsize={opt.batchsize}; trainsize={opt.trainsize}; '
         f'clip={opt.clip}; load={opt.load}; save_path={save_path}; '
         f'use_da_ad={opt.use_da_ad}; use_da_ad_loss={opt.use_da_ad_loss}; lambda_da_ad={opt.lambda_da_ad}; '
-        f'use_iga={opt.use_iga}; iga_alpha={opt.iga_alpha}; '
-        f'iga_warmup_epochs={opt.iga_warmup_epochs}; iga_deadband={opt.iga_deadband}; '
-        f'iga_coeff_min={opt.iga_coeff_min}; iga_conf_deadband={opt.iga_conf_deadband}; '
-        f'iga_conf_gain={opt.iga_conf_gain}; iga_imb_scale={opt.iga_imb_scale}; '
+        f'use_igm={opt.use_igm}; igm_alpha={opt.igm_alpha}; '
+        f'igm_warmup_epochs={opt.igm_warmup_epochs}; igm_deadband={opt.igm_deadband}; '
+        f'igm_coeff_min={opt.igm_coeff_min}; igm_conf_deadband={opt.igm_conf_deadband}; '
+        f'igm_conf_gain={opt.igm_conf_gain}; igm_imb_scale={opt.igm_imb_scale}; '
     )
 
 

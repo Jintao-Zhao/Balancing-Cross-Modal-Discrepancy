@@ -1,12 +1,12 @@
 # Balancing Cross-Modal Perceptual Discrepancy: A Dynamic Optimization Framework for RGB-T Camouflaged Object Detection
 
-This repository contains the code for an RGB-T camouflaged object detection framework. It includes training with the DaAD and IGA components, MAE evaluation, and prediction-map generation.
+This repository contains the code for an RGB-T camouflaged object detection framework. It includes Discrepancy-aware Adaptive Distillation (DaAD) and Imbalance-aware Gradient Modulation (IGM), MAE evaluation, and prediction-map generation.
 
 ## Method and Results
 
 ### Network Architecture
 
-![Network architecture of the proposed framework, including DaAD and IGA](assets/fig3.png)
+![Network architecture of the proposed framework, including DaAD and IGM](assets/fig3.png)
 
 ## Requirements
 
@@ -29,7 +29,7 @@ The training dataset is not included in the test-dataset download. Prepare the t
 
 ## Training
 
-Example command with DaAD and IGA enabled:
+Example command with DaAD and IGM enabled:
 
 ```bash
 python train.py \
@@ -38,7 +38,7 @@ python train.py \
   --save_path ./checkpoints/experiment \
   --use_da_ad \
   --use_da_ad_loss \
-  --use_iga
+  --use_igm
 ```
 
 The script saves checkpoints and a training log under `--save_path`. See `python train.py --help` for the available options.
